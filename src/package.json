@@ -1,0 +1,17 @@
+{
+  "name": "twitter-feature-flags-fetcher",
+  "version": "1.0.0",
+  "description": "CLI utility to fetch Twitter feature flags",
+  "main": "feature-flags-fetcher.ts",
+  "scripts": {
+    "start": "ts-node feature-flags-fetcher.ts"
+  },
+  "dependencies": {
+    "axios": "^1.6.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.19"
+  }
+} 
