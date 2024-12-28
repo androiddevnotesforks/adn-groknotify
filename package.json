@@ -2,7 +2,6 @@
   "name": "twitter-flags-site",
   "version": "1.0.0",
   "scripts": {
-    "fetch": "ts-node local-fetcher.ts",
     "serve": "npx http-server public"
   },
   "dependencies": {
