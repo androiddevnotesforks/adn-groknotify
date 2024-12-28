@@ -5,10 +5,28 @@ import * as path from 'path';
 const GROK_BASE_URL = 'https://grok.com';
 const OUTPUT_DIR = path.join(__dirname, 'codebase', 'static');
 
-// Regex patterns for different types of static files
+// Comprehensive regex patterns for all static file types
 const STATIC_FILE_PATTERNS = [
-    /_next\/static\/(?:chunks|css|media|images)\/[^"'\s]+\.[^"'\s]+/g,  // Matches all static file types
-    /_next\/static\/[^"'\s]+\/[^"'\s]+\.[^"'\s]+/g,  // Broader pattern to catch other static files
+    // Next.js static files in various directories
+    /_next\/static\/(?:chunks|css|media|images|fonts|assets)\/[^"'\s]+?\.[a-zA-Z0-9]+(?:\?[^"'\s]*)?/g,
+    
+    // CSS files
+    /_next\/static\/css\/[^"'\s]+?\.css(?:\?[^"'\s]*)?/g,
+    
+    // Image files
+    /_next\/static\/(?:media|images)\/[^"'\s]+?\.(?:png|jpg|jpeg|gif|svg|webp|ico)(?:\?[^"'\s]*)?/g,
+    
+    // Font files
+    /_next\/static\/(?:media|fonts)\/[^"'\s]+?\.(?:woff|woff2|eot|ttf|otf)(?:\?[^"'\s]*)?/g,
+    
+    // JavaScript files
+    /_next\/static\/(?:chunks|js)\/[^"'\s]+?\.js(?:\?[^"'\s]*)?/g,
+    
+    // JSON files
+    /_next\/static\/[^"'\s]+?\.json(?:\?[^"'\s]*)?/g,
+    
+    // Catch-all for any other static files
+    /_next\/static\/[^"'\s]+?\/[^"'\s]+?\.[\w]+(?:\?[^"'\s]*)?/g
 ];
 
 async function ensureDirectoryExists(filePath: string) {
@@ -17,12 +35,27 @@ async function ensureDirectoryExists(filePath: string) {
 }
 
 async function saveFile(filePath: string, content: string | object) {
-    const fullPath = path.join(OUTPUT_DIR, filePath.replace(/^\//, ''));
+    // Remove query parameters from the file path
+    const cleanFilePath = filePath.replace(/\?.*$/, '');
+    const fullPath = path.join(OUTPUT_DIR, cleanFilePath.replace(/^\//, ''));
     await ensureDirectoryExists(fullPath);
-    await fs.writeFile(
-        fullPath,
-        typeof content === 'string' ? content : JSON.stringify(content)
-    );
+    
+    // Handle binary files (images, fonts, etc.)
+    const isBinaryFile = /\.(png|jpg|jpeg|gif|webp|ico|woff|woff2|eot|ttf|otf)$/i.test(cleanFilePath);
+    
+    if (isBinaryFile) {
+        // For binary files, get the response as arraybuffer
+        const response = await axios.get(`${GROK_BASE_URL}${filePath.startsWith('/') ? '' : '/'}${filePath}`, {
+            responseType: 'arraybuffer'
+        });
+        await fs.writeFile(fullPath, Buffer.from(response.data));
+    } else {
+        // For text files
+        await fs.writeFile(
+            fullPath,
+            typeof content === 'string' ? content : JSON.stringify(content, null, 2)
+        );
+    }
 }
 
 async function fetchStaticFiles() {
@@ -45,13 +78,20 @@ async function fetchStaticFiles() {
 
         // Fetch each file
         for (const filePath of uniqueFiles) {
-            const fileUrl = `${GROK_BASE_URL}${filePath.startsWith('/') ? '' : '/'}${filePath}`;
-            
             try {
-                const fileResponse = await axios.get(fileUrl);
-                const content = fileResponse.data;
+                const fileUrl = `${GROK_BASE_URL}${filePath.startsWith('/') ? '' : '/'}${filePath}`;
                 
-                await saveFile(filePath, content);
+                // Check if it's a binary file
+                const isBinaryFile = /\.(png|jpg|jpeg|gif|webp|ico|woff|woff2|eot|ttf|otf)$/i.test(filePath);
+                
+                if (!isBinaryFile) {
+                    const fileResponse = await axios.get(fileUrl);
+                    await saveFile(filePath, fileResponse.data);
+                } else {
+                    // Binary files are handled directly in saveFile
+                    await saveFile(filePath, '');
+                }
+                
                 console.log(`Successfully downloaded: ${filePath}`);
             } catch (error) {
                 if (error instanceof AxiosError) {
