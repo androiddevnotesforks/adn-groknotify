@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CDN Files Explorer</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .file-tree {
+            font-family: monospace;
+            white-space: pre;
+            line-height: 1.5;
+        }
+        .file {
+            color: #2980b9;
+        }
+        .directory {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .size {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        .timestamp {
+            color: #95a5a6;
+            font-size: 0.9em;
+        }
+        .search {
+            margin-bottom: 20px;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        a {
+            color: #2980b9;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .file-link {
+            color: inherit;
+            text-decoration: none;
+        }
+        .file-link:hover {
+            text-decoration: underline;
+            color: #3498db;
+        }
+    </style>
+</head>
+<body>
+    <h1>CDN Files Explorer</h1>
+    <input type="text" class="search" placeholder="Search files..." oninput="filterFiles(this.value)">
+    <div class="container">
+        <div class="section">
+            <h2>ChatGPT Files</h2>
+            <div class="file-tree" id="chatgpt-tree">
+chatgpt-codebase/
+└── assets/
+    ├── <a href="https://cdn.oaistatic.com/assets/apple-touch-icon-mz9nytnj.webp" class="file-link">apple-touch-icon-mz9nytnj.webp</a> <span class="size">(2.8 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/b6besid35puipqnp.js" class="file-link">b6besid35puipqnp.js</a> <span class="size">(5.0 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/bbqge6n6s1oo3m8q.js" class="file-link">bbqge6n6s1oo3m8q.js</a> <span class="size">(805.6 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/chatgpt-share-og-u7j5uyao.webp" class="file-link">chatgpt-share-og-u7j5uyao.webp</a> <span class="size">(8.4 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/conversation-small-iybhw0ps.css" class="file-link">conversation-small-iybhw0ps.css</a> <span class="size">(30.2 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/csjmdiqycnwqv9r7.js" class="file-link">csjmdiqycnwqv9r7.js</a> <span class="size">(3.1 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/d9k6yis2vw49nbmw.js" class="file-link">d9k6yis2vw49nbmw.js</a> <span class="size">(0.3 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/dii6f0f58vjyxn3r.js" class="file-link">dii6f0f58vjyxn3r.js</a> <span class="size">(10.8 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/dwmw1863uvkv3yw8.js" class="file-link">dwmw1863uvkv3yw8.js</a> <span class="size">(2.3 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/e9ioikt8tbassp1n.js" class="file-link">e9ioikt8tbassp1n.js</a> <span class="size">(248.1 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/favicon-32x32-p4ktpm1x.webp" class="file-link">favicon-32x32-p4ktpm1x.webp</a> <span class="size">(0.6 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/favicon-dark-32x32-gt5kfzyp.webp" class="file-link">favicon-dark-32x32-gt5kfzyp.webp</a> <span class="size">(0.6 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/favicon-o20kmmos.svg" class="file-link">favicon-o20kmmos.svg</a> <span class="size">(4.4 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/g36btoko3xu1u3po.js" class="file-link">g36btoko3xu1u3po.js</a> <span class="size">(7.8 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/i3e992wo3f24vtnh.js" class="file-link">i3e992wo3f24vtnh.js</a> <span class="size">(0.2 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/j0e9x6age48ds4le.js" class="file-link">j0e9x6age48ds4le.js</a> <span class="size">(11.8 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/jemy6hsyipgeqz4b.js" class="file-link">jemy6hsyipgeqz4b.js</a> <span class="size">(2.3 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/jjr9on9cxlrbskjq.js" class="file-link">jjr9on9cxlrbskjq.js</a> <span class="size">(0.1 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/jm0r787aq5qhv46g.js" class="file-link">jm0r787aq5qhv46g.js</a> <span class="size">(0.4 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/k9i239fw3jmco37f.js" class="file-link">k9i239fw3jmco37f.js</a> <span class="size">(2.9 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/ko9ryq875r77qz9j.js" class="file-link">ko9ryq875r77qz9j.js</a> <span class="size">(2.9 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/kpws2hmhwlr4j51g.js" class="file-link">kpws2hmhwlr4j51g.js</a> <span class="size">(2.1 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/kz78ocyuw69em4ok.js" class="file-link">kz78ocyuw69em4ok.js</a> <span class="size">(7.6 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/lemv4z8z7gk39eh5.js" class="file-link">lemv4z8z7gk39eh5.js</a> <span class="size">(462.3 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/lt2ef0v2naysiy2l.js" class="file-link">lt2ef0v2naysiy2l.js</a> <span class="size">(1.1 MB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/manifest-8f48dfa2.js" class="file-link">manifest-8f48dfa2.js</a> <span class="size">(53.6 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/md3qrzfltjyzts14.js" class="file-link">md3qrzfltjyzts14.js</a> <span class="size">(4.2 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/mmwacm2oz5glh3tg.js" class="file-link">mmwacm2oz5glh3tg.js</a> <span class="size">(6.8 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/mn1nh5nafluqb0zf.js" class="file-link">mn1nh5nafluqb0zf.js</a> <span class="size">(15.8 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/nebqrngmicfayh1l.js" class="file-link">nebqrngmicfayh1l.js</a> <span class="size">(1.1 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/ngpfizqqb9onsju2.js" class="file-link">ngpfizqqb9onsju2.js</a> <span class="size">(130.8 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/oqxp7xd8oekmrayn.js" class="file-link">oqxp7xd8oekmrayn.js</a> <span class="size">(2.6 KB)</span>
+    ├── <a href="https://cdn.oaistatic.com/assets/pah0un9d5vytizt6.js" class="file-link">pah0un9d5vytizt6.js</a> <span class="size">(15.3 KB)</span>
+    └── <a href="https://cdn.oaistatic.com/assets/root-o5vuh9g4.css" class="file-link">root-o5vuh9g4.css</a> <span class="size">(343.1 KB)</span>
+            </div>
+        </div>
+        <div class="section">
+            <h2>Grok Files</h2>
+            <div class="file-tree" id="grok-tree">
+codebase/
+└── static/
+    ├── <a href="https://grok.com/twitter-image.png" class="file-link">twitter-image.png</a>
+    ├── <a href="https://grok.com/discord.gg" class="file-link">discord.gg</a>
+    ├── <a href="https://grok.com/grok.com" class="file-link">grok.com</a>
+    ├── <a href="https://grok.com/x.ai" class="file-link">x.ai</a>
+    ├── <a href="https://grok.com/accounts.x" class="file-link">accounts.x</a>
+    ├── chunks/
+    │   ├── <a href="https://grok.com/_next/static/chunks/1ea0f737-bb8a4acbc720e293.js" class="file-link">1ea0f737-bb8a4acbc720e293.js</a>
+    │   ├── <a href="https://grok.com/_next/static/chunks/681-530c42231ee2478d.js" class="file-link">681-530c42231ee2478d.js</a>
+    │   ├── <a href="https://grok.com/_next/static/chunks/85-e1a2536cfdfb8cc5.js" class="file-link">85-e1a2536cfdfb8cc5.js</a>
+    │   ├── <a href="https://grok.com/_next/static/chunks/9ffa21ba-954e4d4acb668676.js" class="file-link">9ffa21ba-954e4d4acb668676.js</a>
+    │   ├── app/
+    │   │   ├── coming-soon/
+    │   │   │   └── <a href="https://grok.com/_next/static/chunks/app/coming-soon/page-b546af968697feca.js" class="file-link">page-b546af968697feca.js</a>
+    │   │   └── <a href="https://grok.com/_next/static/chunks/app/global-error-d528d98fb84d2727.js" class="file-link">global-error-d528d98fb84d2727.js</a>
+    │   └── <a href="https://grok.com/_next/static/chunks/bf06e590-823c590ad7b7e29a.js" class="file-link">bf06e590-823c590ad7b7e29a.js</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function filterFiles(query) {
+            query = query.toLowerCase();
+            const trees = document.querySelectorAll('.file-tree');
+            
+            trees.forEach(tree => {
+                const lines = tree.innerHTML.split('\n');
+                const filteredLines = lines.map(line => {
+                    if (line.toLowerCase().includes(query)) {
+                        return line.replace(line, `<mark>${line}</mark>`);
+                    }
+                    return line;
+                });
+                tree.innerHTML = filteredLines.join('\n');
+            });
+        }
+    </script>
+</body>
+</html> 
