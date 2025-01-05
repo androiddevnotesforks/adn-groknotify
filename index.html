@@ -77,6 +77,10 @@
             text-decoration: underline;
             color: #3498db;
         }
+        mark {
+            background-color: #ffd700;
+            padding: 0;
+        }
     </style>
 </head>
 <body>
@@ -154,14 +158,23 @@ codebase/
             const trees = document.querySelectorAll('.file-tree');
             
             trees.forEach(tree => {
-                const lines = tree.innerHTML.split('\n');
-                const filteredLines = lines.map(line => {
-                    if (line.toLowerCase().includes(query)) {
-                        return line.replace(line, `<mark>${line}</mark>`);
+                // Remove existing highlights
+                tree.innerHTML = tree.innerHTML.replace(/<\/?mark>/g, '');
+                
+                if (query.trim() === '') return;
+
+                // Get all file links
+                const links = tree.querySelectorAll('a');
+                links.forEach(link => {
+                    const text = link.textContent;
+                    if (text.toLowerCase().includes(query)) {
+                        const highlighted = text.replace(
+                            new RegExp(`(${query})`, 'gi'),
+                            '<mark>$1</mark>'
+                        );
+                        link.innerHTML = highlighted;
                     }
-                    return line;
                 });
-                tree.innerHTML = filteredLines.join('\n');
             });
         }
     </script>
